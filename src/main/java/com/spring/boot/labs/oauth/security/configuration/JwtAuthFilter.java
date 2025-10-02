@@ -37,12 +37,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         
         log.info("Checking auth for Incoming request");
 
-        String autheHeader = request.getHeader("AUTHORIZATION");
-        if (autheHeader == null || !autheHeader.startsWith("Bearer ")) {
+        String authHeader = request.getHeader("AUTHORIZATION");
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
-        String accessToken = autheHeader.split("Bearer ")[1];
+        String accessToken = authHeader.split("Bearer ")[1];
 
         String userName = jwtTokenService.extractUserName(accessToken);
 
@@ -51,7 +51,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             if (user == null) {
                 throw new UsernameNotFoundException("User does not exist: "+userName);
             }
-            Authentication authentication = new UsernamePasswordAuthenticationToken(userName, accessToken);
+            Authentication authentication = new UsernamePasswordAuthenticationToken(user, accessToken, user.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
         
