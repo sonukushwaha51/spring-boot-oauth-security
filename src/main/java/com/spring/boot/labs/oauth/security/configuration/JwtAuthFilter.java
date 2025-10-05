@@ -2,7 +2,6 @@ package com.spring.boot.labs.oauth.security.configuration;
 
 import java.io.IOException;
 
-import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -40,6 +39,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         String authHeader = request.getHeader("AUTHORIZATION");
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
+            log.info("Proceeding to further step");
             return;
         }
         String accessToken = authHeader.split("Bearer ")[1];

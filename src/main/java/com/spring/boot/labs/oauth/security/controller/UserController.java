@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.spring.boot.labs.oauth.security.service.UserService;
 
 @RestController
-@RequestMapping("/v1/public")
+@RequestMapping("/public")
 public class UserController {
 
     @Autowired

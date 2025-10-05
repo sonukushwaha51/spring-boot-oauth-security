@@ -1,5 +1,7 @@
 package com.spring.boot.labs.oauth.security.entity;
 
+import java.time.Instant;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -14,20 +16,19 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import static com.spring.boot.labs.oauth.security.entity.enumFiles.RoleToAuthorityMapping.authorityMap;
-
 @Entity
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(indexes = {@Index(name = "idx_provider_id_provider_type", columnList = "provider_id,provider_type")})
+@Table(indexes = {@Index(name = "idx_provider_id_provider_type", columnList = "provider_id,provider_type"),
+                    @Index(name = "idx_created_date", columnList = "created_date")})
 public class User implements UserDetails {
 
     @Column(name = "user_id")
     @Builder.Default
     @Id
-    private String userId = UUID.randomUUID().toString();
+    private String id = UUID.randomUUID().toString();
 
     @JoinColumn(name = "user_name", unique = true)
     private String userName;
@@ -46,7 +47,7 @@ public class User implements UserDetails {
     private String lastName;
 
     @Column(name = "date_of_birth")
-    private String dateOfBirth;
+    private LocalDate dateOfBirth;
 
     @Column(name = "provider_id")
     private String providerId;
@@ -54,15 +55,21 @@ public class User implements UserDetails {
     @Column(name = "provider_type")
     private String providerType;
 
-    @ElementCollection
-    private Set<GrantedAuthority> authorities = new HashSet<>();
+    @Column(name = "created_date")
+    private LocalDate createdDate;
+
+    @Column(name = "updated_date")
+    @Builder.Default
+    private Date updatedDate = Date.from(Instant.now());
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    private Set<String> authorities = new HashSet<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        authorityMap.get(role)
-                .forEach(authority -> authorities.add(new SimpleGrantedAuthority(authority)));
-        authorities.add(new SimpleGrantedAuthority(role.getRole()));
-        return authorities;
+        return authorities.stream()
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toSet());
     }
 
     @Override

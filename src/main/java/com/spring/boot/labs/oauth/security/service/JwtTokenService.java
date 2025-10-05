@@ -30,7 +30,7 @@ public class JwtTokenService {
         return Jwts
                 .builder()
                 .subject(user.getUsername())
-                .claim("userId", user.getUserId())
+                .claim("userId", user.getId())
                 .claim("role", user.getAuthorities())
                 .expiration(new Date(System.currentTimeMillis() + 60*1000*10))
                 .issuedAt(new Date())

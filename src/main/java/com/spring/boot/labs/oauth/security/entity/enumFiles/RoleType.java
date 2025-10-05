@@ -7,10 +7,10 @@ import lombok.RequiredArgsConstructor;
 @Getter
 public enum RoleType {
 
-    ADMIN("ROLE_ADMIN"),
-    DOCTOR("ROLE_DOCTOR"),
-    PATIENT("ROLE_PATIENT"),
-    USER("ROLE_USER");
+    ADMIN("ADMIN"),
+    DOCTOR("DOCTOR"),
+    PATIENT("PATIENT"),
+    USER("USER");
 
     private final String role;
 }
