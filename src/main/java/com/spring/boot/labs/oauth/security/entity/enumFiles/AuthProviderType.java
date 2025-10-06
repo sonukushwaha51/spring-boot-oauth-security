@@ -10,7 +10,8 @@ public enum AuthProviderType {
     GOOGLE("google"),
     GITHUB("github"),
     EMAIL("email"),
-    META("meta");
+    META("meta"),
+    LINKEDIN("linkedin");
 
     private final String providerType;
 }

@@ -2,9 +2,15 @@ package com.spring.boot.labs.oauth.security.service;
 
 import java.util.Date;
 
+import com.spring.boot.labs.oauth.security.AuthUtil;
+import com.spring.boot.labs.oauth.security.entity.enumFiles.AuthProviderType;
 import com.spring.boot.labs.oauth.security.entity.enumFiles.RoleType;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 import com.spring.boot.labs.oauth.security.entity.LoginRequest;
@@ -15,6 +21,7 @@ import com.spring.boot.labs.oauth.security.entity.User;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class AuthService {
 
     @Autowired
@@ -22,6 +29,8 @@ public class AuthService {
 
     @Autowired
     JwtTokenService jwtTokenService;
+
+    private final AuthUtil authUtil;
 
     public LoginResponse login(LoginRequest loginRequest) {
         String userIdType = LoginRequest.determineUserIdType(loginRequest.getUserName());
@@ -46,4 +55,23 @@ public class AuthService {
 
     }
 
+    public ResponseEntity<LoginResponse> handleOAuthLogin(String registrationId, OAuth2User oAuth2User) {
+        // Get provider Type
+        AuthProviderType authProviderType = authUtil.retrieveProviderType(registrationId);
+
+        // Get provider Id
+        String providerId = authUtil.retrieveProviderId(registrationId, oAuth2User);
+
+        // Check user exists. If yes, login and return token. If user does not exist, signup then login and return token
+        String userName = authUtil.retrieveUserName(registrationId, oAuth2User);
+        User user = userService.loadUser(userName, LoginRequest.determineUserIdType(userName));
+        if (user != null) {
+           LoginRequest loginRequest = LoginRequest.builder().userName(userName).build();
+           return new ResponseEntity<>(login(loginRequest), HttpStatus.OK);
+        }
+        SignupRequest signupRequest = SignupRequest.builder().build();
+        signup(signupRequest, RoleType.USER);
+        LoginRequest loginRequest = LoginRequest.builder().userName(userName).build();
+        return new ResponseEntity<>(login(loginRequest), HttpStatus.OK);
+    }
 }
