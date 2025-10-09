@@ -7,20 +7,27 @@ spring:
             client-id: ajsihdiwq
             client-secret: qwjhqwgeqwhwq
           github:
-            client-id: jahuqwheuqwg
-            client-secret: ashhdqwdwqkdowjd
-          mycustom: # <--- your custom provider ID
+            client-id: Ov23liTbBJgeP6EH2mna
+            client-secret: ENC(T4JUwF2DdoIRjma3ZhtI4XezEfK6CsPfgNTaDIZZfYT9CgDK6wttBetnwkxn2F9v5uHIYhSwFVU=)
+          linkedin: # <--- custom provider ID
             client-id: your-client-id
             client-secret: your-client-secret
-            client-authentication-method: client_secret_basic
+            scope:
+              - r_liteprofile
+              - r_emailaddress
             authorization-grant-type: authorization_code
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
-            scope: openid, profile, email
-            provider: mycustom     # <--- link to provider definition below
+            client-name: LinkedIn
+            client-authentication-method: post
         provider:
-          mycustom:
-            authorization-uri: https://auth.example.com/oauth2/authorize
-            token-uri: https://auth.example.com/oauth2/token
-            user-info-uri: https://auth.example.com/oauth2/userinfo
-            user-name-attribute: sub   # depends on provider (could be "id", "username", etc.)
-            jwk-set-uri: https://auth.example.com/oauth2/jwks  # if OpenID Connect
+          linkedin:
+            authorization-uri: https://www.linkedin.com/oauth/v2/authorization
+            token-uri: https://www.linkedin.com/oauth/v2/accessToken
+            user-info-uri: https://api.linkedin.com/v2/me
+            user-name-attribute: id
+
+
+jasypt:
+  encryptor:
+    password: JmZV8pnQeUcOovP
+    algorithm: PBEWithMD5AndDES

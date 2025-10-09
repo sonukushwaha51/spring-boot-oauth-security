@@ -3,7 +3,12 @@ package com.spring.boot.labs.oauth.security;
 import com.spring.boot.labs.oauth.security.entity.enumFiles.AuthProviderType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.stereotype.Component;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+@Component
 public class AuthUtil {
 
 
@@ -29,16 +34,40 @@ public class AuthUtil {
     public String retrieveProviderId(String registrationId, OAuth2User oAuth2User) {
         switch (registrationId) {
             case "google" -> {
-                return oAuth2User.getAttribute("sub");
+                return String.valueOf(oAuth2User.getAttribute("sub"));
             }
             case "github", "facebook", "linkedin" -> {
-                return oAuth2User.getAttribute("id");
+                Integer providerId = oAuth2User.getAttribute("id");
+                return String.valueOf(providerId);
             }
             default -> throw new IllegalArgumentException("Invalid Authentication Provider");
         }
     }
 
     public String retrieveUserName(String registrationId, OAuth2User oAuth2User) {
-        return null;
+        switch (registrationId) {
+            case "github" -> {
+                return oAuth2User.getAttribute("login");
+            }
+            case "google" -> {
+                return oAuth2User.getAttribute("username");
+            }
+            default -> throw new IllegalArgumentException("Could not retrieve username");
+        }
+    }
+
+    public Map<String, String> getOtherAttributes(AuthProviderType authProviderType, OAuth2User oAuth2User) {
+        Map<String, String> map = new LinkedHashMap<>();
+        switch (authProviderType) {
+            case GITHUB -> {
+                map.put("email", oAuth2User.getAttribute("email"));
+                map.put("login", oAuth2User.getAttribute("login"));
+                map.put("firstName", oAuth2User.getAttribute("name"));
+            }
+            case GOOGLE -> {
+                map.put("email", oAuth2User.getAttribute("email"));
+            }
+        }
+        return map;
     }
 }

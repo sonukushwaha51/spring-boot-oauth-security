@@ -1,6 +1,7 @@
 package com.spring.boot.labs.oauth.security.service;
 
 import java.util.Date;
+import java.util.Map;
 
 import com.spring.boot.labs.oauth.security.AuthUtil;
 import com.spring.boot.labs.oauth.security.entity.enumFiles.AuthProviderType;
@@ -36,22 +37,22 @@ public class AuthService {
         String userIdType = LoginRequest.determineUserIdType(loginRequest.getUserName());
         User user = userService.loadUser(loginRequest.getUserName(), userIdType);
         return LoginResponse.builder()
-                            .accessToken(jwtTokenService.generateToken(user))
-                            .userId(user.getId())
-                            .expiration(new Date(System.currentTimeMillis() + 1000*60*15).getTime())
-                            .build();
+                .accessToken(jwtTokenService.generateToken(user))
+                .userId(user.getId())
+                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 15).getTime())
+                .build();
     }
 
-    public SignupResponse signup(SignupRequest request, RoleType role) {
+    public SignupResponse signup(SignupRequest request, RoleType role, AuthProviderType authProviderType, String providerId) {
         User user = userService.loadUser(request.getUserName(), LoginRequest.determineUserIdType(request.getUserName()));
         if (user != null) {
             throw new RuntimeException("User already exists");
         }
-        user = userService.createCustomer(request, role);
+        user = userService.createCustomer(request, role, authProviderType, providerId);
         return SignupResponse.builder()
-                            .userId(user.getId())
-                            .userName(request.getUserName())
-                            .build();
+                .userId(user.getUsername())
+                .userName(request.getUserName())
+                .build();
 
     }
 
@@ -66,11 +67,18 @@ public class AuthService {
         String userName = authUtil.retrieveUserName(registrationId, oAuth2User);
         User user = userService.loadUser(userName, LoginRequest.determineUserIdType(userName));
         if (user != null) {
-           LoginRequest loginRequest = LoginRequest.builder().userName(userName).build();
-           return new ResponseEntity<>(login(loginRequest), HttpStatus.OK);
+            LoginRequest loginRequest = LoginRequest.builder().userName(userName).build();
+            return new ResponseEntity<>(login(loginRequest), HttpStatus.OK);
         }
-        SignupRequest signupRequest = SignupRequest.builder().build();
-        signup(signupRequest, RoleType.USER);
+
+        Map<String, String> userAttributes = authUtil.getOtherAttributes(authProviderType, oAuth2User);
+        SignupRequest signupRequest = SignupRequest.builder()
+                .userName(userName)
+                .email(userAttributes.get("email"))
+                .firstName(userAttributes.get("firstName"))
+                .lastName(userAttributes.get("lastName"))
+                .build();
+        signup(signupRequest, RoleType.USER, authProviderType, providerId);
         LoginRequest loginRequest = LoginRequest.builder().userName(userName).build();
         return new ResponseEntity<>(login(loginRequest), HttpStatus.OK);
     }
