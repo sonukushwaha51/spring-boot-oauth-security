@@ -8,6 +8,7 @@ import java.util.Set;
 
 import com.spring.boot.labs.oauth.security.entity.Doctor;
 import com.spring.boot.labs.oauth.security.entity.SignupRequest;
+import com.spring.boot.labs.oauth.security.entity.enumFiles.AuthProviderType;
 import com.spring.boot.labs.oauth.security.entity.enumFiles.RoleType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
@@ -49,13 +50,15 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    public User createCustomer(SignupRequest request, RoleType role) {
+    public User createCustomer(SignupRequest request, RoleType role, AuthProviderType authProviderType, String providerId) {
         User userDetail =  User.builder()
                 .userName(request.getUserName())
                 .email(request.getEmail())
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
-                .password(passwordEncoder.encode(request.getPassword()))
+                .providerId(providerId)
+                .providerType(authProviderType.name())
+                .password(request.getPassword() != null ? passwordEncoder.encode(request.getPassword()) : null)
                 .role(role)
                 .dateOfBirth(request.getDateOfBirth())
                 .createdDate(LocalDate.now())

@@ -1,5 +1,6 @@
 package com.spring.boot.labs.oauth.security.controller;
 
+import com.spring.boot.labs.oauth.security.entity.enumFiles.AuthProviderType;
 import com.spring.boot.labs.oauth.security.entity.enumFiles.RoleType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,13 +38,13 @@ public class AuthController {
     @PostMapping("/user/customer-signup")
     public ResponseEntity<SignupResponse> userSignup(@RequestBody SignupRequest signupRequest) {
         log.info("Creating user: {}", signupRequest.getUserName());
-        return new ResponseEntity<>(authService.signup(signupRequest, RoleType.USER), HttpStatus.OK);
+        return new ResponseEntity<>(authService.signup(signupRequest, RoleType.USER, AuthProviderType.EMAIL, null), HttpStatus.OK);
     }
 
     @PostMapping("/admin/customer-signup")
     public ResponseEntity<SignupResponse> adminSignup(@RequestBody SignupRequest signupRequest) {
         log.info("Creating user: {}", signupRequest.getUserName());
-        return new ResponseEntity<>(authService.signup(signupRequest, RoleType.ADMIN), HttpStatus.OK);
+        return new ResponseEntity<>(authService.signup(signupRequest, RoleType.ADMIN, AuthProviderType.EMAIL, null), HttpStatus.OK);
     }
 
 
