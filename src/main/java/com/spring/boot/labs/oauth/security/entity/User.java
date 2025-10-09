@@ -6,6 +6,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import com.spring.boot.labs.oauth.security.entity.enumFiles.RoleType;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -38,6 +39,7 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private RoleType role;
 
+    @Nullable
     private String email;
 
     @Column(name = "first_name")
