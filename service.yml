@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: spring-boot-oauth-security-external-service
+  labels:
+    app: spring-boot-oauth-security-app
+spec:
+  # CRUCIAL: 'LoadBalancer' type provisions an external Google Cloud Load Balancer
+  type: LoadBalancer
+  # This selector links the Service to all Pods with the label 'app: spring-boot-app'
+  selector:
+    app: spring-boot-oauth-security-app
+  ports:
+    - protocol: TCP
+      # 'port' is the external port the Load Balancer exposes to the internet
+      port: 80
+      # 'targetPort' is the port on the container (8080 from your deployment.yaml)
+      targetPort: 8080

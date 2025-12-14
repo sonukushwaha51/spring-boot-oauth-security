@@ -12,6 +12,7 @@
 	<artifactId>spring-boot-oauth-security</artifactId>
 	<version>0.0.5-SNAPSHOT</version>
 	<name>spring-boot-oauth-security</name>
+	<packaging>war</packaging>
 	<description>Spring boot oauth security</description>
 	<url/>
 	<licenses>

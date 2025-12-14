@@ -1,11 +1,13 @@
 spring:
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:local}
   security:
     oauth2:
       client:
         registration:
           google:
-            client-id: ajsihdiwq
-            client-secret: qwjhqwgeqwhwq
+            client-id: 905512589301-g18lcnm5uk273i0g0k0e3m3qg6je74k4.apps.googleusercontent.com
+            client-secret: ENC(0DjR9yvOwDWuqXbZTjcbKdAGRIV3v3juIES5IyikpHNdpvcT3v7OPdLIAdc8yMZP)
           github:
             client-id: Ov23liTbBJgeP6EH2mna
             client-secret: ENC(T4JUwF2DdoIRjma3ZhtI4XezEfK6CsPfgNTaDIZZfYT9CgDK6wttBetnwkxn2F9v5uHIYhSwFVU=)

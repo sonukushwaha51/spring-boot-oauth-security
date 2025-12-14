@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spring-boot-oauth-security-deployment
+  labels:
+    app: spring-boot-oauth-security
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: spring-boot-oauth-security
+  template:
+    metadata:
+      labels:
+        app: spring-boot-oauth-security
+    spec:
+      # Optional: Link a specific Kubernetes Service Account (KSA) if using Workload Identity
+      # serviceAccountName: cloud-sql-sa
+      containers:
+        - name: spring-boot-oauth-security
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "dev"
+          # This is the placeholder for your CI/CD substitution (e.g., v1.0.0)
+          image: us-central1-docker.pkg.dev/eighth-saga-474816-a6/dataflow-docker-artifactory/spring-boot-oauth-security:${IMAGE_TAG}
+          ports:
+            - containerPort: 8080 # The port your application (Tomcat) listens on
+
+          # Best practice: Define resource requests and limits
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "1000m"
+              memory: "1024Mi"
+
+        # --- 2. Cloud SQL Auth Proxy Sidecar Container (Recommended for secure connection) ---
+        - name: cloud-sql-proxy
+          # Always use the latest stable version
+          image: gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.14.1
+          # The command to start the proxy, listening on 3306 (default MySQL port)
+          command: ["/cloud-sql-proxy",
+                    "eighth-saga-474816-a6:us-central1:spring-security",
+                    "--port=3306",
+                    "--structured-logs"]
+          securityContext:
+            # Runs the proxy as a non-root user for security
+            runAsNonRoot: true

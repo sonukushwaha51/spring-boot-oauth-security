@@ -1,0 +1,56 @@
+steps:
+  # -------------------------------------------------------------------------
+  # Step 1: Get GKE Cluster Credentials
+  # This command configures the 'kubectl' tool for the subsequent steps.
+  # -------------------------------------------------------------------------
+  - name: 'gcr.io/cloud-builders/gcloud'
+    id: 'Get-GKE-Credentials'
+    args:
+      - container
+      - clusters
+      - get-credentials
+      - spring-boot-labs-cluster
+      - --zone=us-central1-a
+      - --project=eighth-saga-474816-a6
+
+  - name: 'gcr.io/cloud-builders/kubectl'
+    id: 'Apply-Service-YAML'
+    args:
+      - apply
+      - -f
+      - service.yaml
+
+  - name: 'gcr.io/cloud-builders/bash'
+    id: 'Substitute-Image-Tag'
+    args:
+      - '-c'
+      - |
+        sed "s|\${IMAGE_TAG}|${_IMAGE_VERSION}|g" deployment.yaml > deployment-temp.yml
+
+  # -------------------------------------------------------------------------
+  # Step 4: Apply the Versioned Deployment
+  # This triggers a rolling update on the GKE cluster using the new image tag.
+  # -------------------------------------------------------------------------
+  - name: 'gcr.io/cloud-builders/kubectl'
+    id: 'Deploy-to-GKE'
+    args:
+      - apply
+      - -f
+      - deployment-temp.yml # Apply the temporary file with the correct version
+
+  # -------------------------------------------------------------------------
+  # Step 5: Wait for Rollout to Complete (Optional but recommended)
+  # Ensures the new version is stable and ready before the build completes.
+  # -------------------------------------------------------------------------
+  - name: 'gcr.io/cloud-builders/kubectl'
+    id: 'Wait-for-Rollout'
+    args:
+      - rollout
+      - status
+      - deployment/spring-boot-app-deployment
+
+substitutions:
+  _IMAGE_VERSION : latest
+
+options:
+  logging: CLOUD_LOGGING_ONLY

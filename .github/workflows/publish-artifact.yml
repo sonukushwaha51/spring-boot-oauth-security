@@ -49,11 +49,13 @@ jobs:
       run: echo "VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
 
     - name: Build and publish
+      env:
+        SPRING_PROFILE_ACTIVE: local
       run:
         |
         GROUP_ID="com.gcp.labs"
         ARTIFACT_ID="spring-boot-oauth-security"
-        mvn deploy -B -f ./pom.xml -Ddeploy.version=${VERSION} -Ddeploy.repository.url=${ARTIFACTORY_URL} -Ddeploy.groupId=${GROUP_ID} -Ddeploy.repository.id=${ARTIFACT_ID} --settings ./settings.xml
+        mvn deploy -skipTests -B -f ./pom.xml -Ddeploy.version=${VERSION} -Ddeploy.repository.url=${ARTIFACTORY_URL} -Ddeploy.groupId=${GROUP_ID} -Ddeploy.repository.id=${ARTIFACT_ID} --settings ./settings.xml
         
 
 
