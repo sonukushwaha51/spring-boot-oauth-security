@@ -19,6 +19,9 @@ steps:
       - apply
       - -f
       - service.yaml
+    env:
+      - 'CLOUDSDK_CONTAINER_CLUSTER=spring-boot-labs-cluster'
+      - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
 
   - name: 'gcr.io/cloud-builders/bash'
     id: 'Substitute-Image-Tag'
@@ -37,6 +40,9 @@ steps:
       - apply
       - -f
       - deployment-temp.yml # Apply the temporary file with the correct version
+    env:
+      - 'CLOUDSDK_CONTAINER_CLUSTER=spring-boot-labs-cluster'
+      - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
 
   # -------------------------------------------------------------------------
   # Step 5: Wait for Rollout to Complete (Optional but recommended)
