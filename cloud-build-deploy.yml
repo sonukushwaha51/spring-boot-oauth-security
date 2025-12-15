@@ -23,8 +23,9 @@ steps:
       - 'CLOUDSDK_CONTAINER_CLUSTER=spring-boot-labs-cluster'
       - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
 
-  - name: 'gcr.io/cloud-builders/bash'
+  - name: 'gcr.io/cloud-builders/gcloud'
     id: 'Substitute-Image-Tag'
+    entrypoint: 'bash'
     args:
       - '-c'
       - |
