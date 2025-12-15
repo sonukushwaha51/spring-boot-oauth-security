@@ -18,7 +18,7 @@ steps:
     args:
       - apply
       - -f
-      - service.yaml
+      - service.yml
     env:
       - 'CLOUDSDK_CONTAINER_CLUSTER=spring-boot-labs-cluster'
       - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
@@ -28,7 +28,7 @@ steps:
     args:
       - '-c'
       - |
-        sed "s|\${_IMAGE_TAG}|${_IMAGE_VERSION}|g" deployment.yaml > deployment-temp.yml
+        sed "s|\${_IMAGE_TAG}|${_IMAGE_VERSION}|g" deployment.yml > deployment-temp.yml
 
   # -------------------------------------------------------------------------
   # Step 4: Apply the Versioned Deployment
