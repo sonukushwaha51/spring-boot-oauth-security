@@ -25,7 +25,7 @@ steps:
     args:
       - '-c'
       - |
-        sed "s|\${IMAGE_TAG}|${_IMAGE_VERSION}|g" deployment.yaml > deployment-temp.yml
+        sed "s|\${_IMAGE_TAG}|${_IMAGE_VERSION}|g" deployment.yaml > deployment-temp.yml
 
   # -------------------------------------------------------------------------
   # Step 4: Apply the Versioned Deployment
