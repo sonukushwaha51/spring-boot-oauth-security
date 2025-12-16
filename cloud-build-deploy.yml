@@ -55,6 +55,9 @@ steps:
       - rollout
       - status
       - deployment/spring-boot-app-deployment
+    env:
+      - 'CLOUDSDK_CONTAINER_CLUSTER=spring-boot-labs-cluster'
+      - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
 
 substitutions:
   _IMAGE_VERSION : latest
