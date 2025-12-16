@@ -55,7 +55,7 @@ jobs:
         |
         GROUP_ID="com.gcp.labs"
         ARTIFACT_ID="spring-boot-oauth-security"
-        mvn deploy -skipTests -B -f ./pom.xml -Ddeploy.version=${VERSION} -Ddeploy.repository.url=${ARTIFACTORY_URL} -Ddeploy.groupId=${GROUP_ID} -Ddeploy.repository.id=${ARTIFACT_ID} --settings ./settings.xml
+        mvn deploy -B -f ./pom.xml -Ddeploy.version=${VERSION} -Ddeploy.repository.url=${ARTIFACTORY_URL} -Ddeploy.groupId=${GROUP_ID} -Ddeploy.repository.id=${ARTIFACT_ID} --settings ./settings.xml
         
 
 
