@@ -5,7 +5,7 @@ metadata:
   labels:
     app: spring-boot-oauth-security-app
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: spring-boot-oauth-security-app
@@ -29,11 +29,11 @@ spec:
           # Best practice: Define resource requests and limits
           resources:
             requests:
-              cpu: "250m"
-              memory: "512Mi"
+              cpu: "100m"
+              memory: "256Mi"
             limits:
-              cpu: "1000m"
-              memory: "1024Mi"
+              cpu: "300m"
+              memory: "512Mi"
 
         # --- 2. Cloud SQL Auth Proxy Sidecar Container (Recommended for secure connection) ---
         - name: cloud-sql-proxy
