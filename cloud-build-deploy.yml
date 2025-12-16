@@ -54,7 +54,7 @@ steps:
     args:
       - rollout
       - status
-      - deployment/spring-boot-app-deployment
+      - deployment/spring-boot-oauth-security-deployment
     env:
       - 'CLOUDSDK_CONTAINER_CLUSTER=spring-boot-labs-cluster'
       - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
