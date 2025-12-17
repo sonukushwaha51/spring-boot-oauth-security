@@ -35,6 +35,12 @@ jobs:
       run: |
         echo "ARTIFACT_REGISTRY_TOKEN=$(gcloud auth print-access-token)" >> $GITHUB_ENV
 
+    - name: 'Start Cloud SQL Proxy'
+      uses: 'google-github-actions/setup-cloudsdk@v2'
+      run: |
+        # Using the gcloud components version
+        gcloud sql connect-proxy eighth-saga-474816-a6:us-central1:spring-security --port 3306 &
+
     - name: Determine artifactory url
       run: |
         branch_name=${GITHUB_REF#ref/heads/}
