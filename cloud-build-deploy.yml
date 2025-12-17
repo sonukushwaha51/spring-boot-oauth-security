@@ -16,7 +16,7 @@ steps:
       - |
         # 1. Get Credentials
         gcloud container clusters get-credentials spring-boot-labs-cluster \
-            --zone=us-central1-a \
+            --region=us-central1 \
             --project=eighth-saga-474816-a6
         
         echo "Applying service..."
@@ -33,7 +33,7 @@ steps:
         kubectl rollout status deployment/spring-boot-oauth-security-deployment
     env:
       - 'CLOUDSDK_CONTAINER_CLUSTER=spring-boot-labs-cluster'
-      - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
+      - 'CLOUDSDK_COMPUTE_REGION=us-central1'
 
 substitutions:
   _IMAGE_VERSION : latest
