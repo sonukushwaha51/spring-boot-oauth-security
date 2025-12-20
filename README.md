@@ -82,3 +82,28 @@ spec:
         # Recommended security context to run the proxy as a non-root user.
         securityContext:
           runAsNonRoot: true
+
+# Ingress configuration for meaningful host name
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: app-ingress
+  annotations:
+    # Use the static IP you reserved earlier
+    kubernetes.io/ingress.global-static-ip-name: "my-app-static-ip"
+    # Optional: Automatically provision a Google-managed SSL certificate
+    networking.gke.io/managed-certificates: "my-app-certificate" 
+spec:
+  # Define the domain name you want to use
+  rules:
+  - host: "app.example.com"
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: [YOUR_SERVICE_NAME]
+            port:
+              number: [YOUR_SERVICE_PORT]
