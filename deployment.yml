@@ -23,6 +23,7 @@ spec:
               value: "dev"
           # This is the placeholder for your CI/CD substitution (e.g., v1.0.0)
           image: us-central1-docker.pkg.dev/eighth-saga-474816-a6/dataflow-docker-artifactory/spring-boot-oauth-security:IMAGE_TAG
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080 # The port your application (Tomcat) listens on
 

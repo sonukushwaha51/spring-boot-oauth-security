@@ -27,6 +27,7 @@ steps:
 
         echo "Checking rollout status..."
         # Note: Added namespace flag in case the deployment is not in 'default'
+        kubectl rollout restart deployment spring-boot-oauth-security-deployment
         kubectl rollout status deployment/spring-boot-oauth-security-deployment
     env:
       - 'CLOUDSDK_CONTAINER_CLUSTER=spring-boot-labs-cluster'
