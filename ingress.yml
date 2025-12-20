@@ -6,6 +6,7 @@ metadata:
     kubernetes.io/ingress.class: "gce"
     networking.gke.io/managed-certificates: oauth-cert
 spec:
+  ingressClassName: gce
   rules:
     - host: hpt.mgmt.labs.com
       http:
