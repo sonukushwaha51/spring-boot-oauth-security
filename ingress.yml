@@ -7,6 +7,10 @@ metadata:
     networking.gke.io/managed-certificates: oauth-cert
 spec:
   ingressClassName: gce
+  tls:
+    - hosts:
+        - hpt.mgmt.labs.com
+      secretName: oauth-cert
   rules:
     - host: hpt.mgmt.labs.com
       http:
