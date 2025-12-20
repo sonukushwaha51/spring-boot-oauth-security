@@ -19,14 +19,19 @@ steps:
             --zone=us-central1-a \
             --project=eighth-saga-474816-a6
         
+        echo "Applying cert"
+        kubectl apply -f managed-cert.yml
+        
         echo "Applying service..."
         kubectl apply -f service.yml
+        
+        echo "Applying ingress"
+        kubectl apply -f ingress.yml
         
         echo "Applying deployment..."
         kubectl apply -f deployment-temp.yml
 
         echo "Checking rollout status..."
-        # Note: Added namespace flag in case the deployment is not in 'default'
         kubectl rollout restart deployment spring-boot-oauth-security-deployment
         kubectl rollout status deployment/spring-boot-oauth-security-deployment
     env:

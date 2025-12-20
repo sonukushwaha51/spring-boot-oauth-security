@@ -72,6 +72,10 @@ public class SecurityConfiguration {
                         .requestMatchers("/auth/**").permitAll()
                         .anyRequest().authenticated())
                         .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                        .formLogin(httpSecurityFormLoginConfigurer -> httpSecurityFormLoginConfigurer
+                                .permitAll()
+                                .successHandler(savedRequestAwareAuthenticationSuccessHandler())
+                                .failureHandler(this::oauthFailureHandler))
                         .oauth2Login(oauth -> oauth.successHandler(oAuthSuccessHandler).failureHandler((this::oauthFailureHandler)))
                         .build();
         } catch (Exception exception) {
@@ -94,7 +98,7 @@ public class SecurityConfiguration {
 //    }
 
     public void oauthFailureHandler(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) {
-        log.error("Oauth2 Server error: {}, response: {}", exception.getMessage(), response.toString());
+        log.error("Authentication error: {}, response: {}", exception.getMessage(), response.toString());
     }
 
 }

@@ -6,7 +6,7 @@ metadata:
     app: spring-boot-oauth-security-app
 spec:
   # CRUCIAL: 'LoadBalancer' type provisions an external Google Cloud Load Balancer
-  type: LoadBalancer
+  type: ClusterIP
   # This selector links the Service to all Pods with the label 'app: spring-boot-app'
   selector:
     app: spring-boot-oauth-security-app

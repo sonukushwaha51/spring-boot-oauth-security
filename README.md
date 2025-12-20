@@ -8,6 +8,10 @@
 
 `.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))`
 
+# Connect to GCP CLoud SQL instance from local, Run below command from the path where cloud-sql-proxy is available
+
+`.\cloud-sql-proxy eighth-saga-474816-a6:us-central1:spring-security --port=3307`
+
 # Oauth2 authorization callback url
 
 http://localhost:8080/v1/login/oauth2/code/{provider}
@@ -30,6 +34,21 @@ These YAML files define the desired state of the application and how it is expos
 ### A. `deployment.yaml` (Application Definition with Cloud SQL Sidecar)
 
 This configuration defines the Pods, the number of replicas, and includes the Cloud SQL Auth Proxy as a sidecar container for secure database connectivity.
+
+# Gcloud commands to connect to cluster and create node-pool
+
+For coonecting to cloud sql from cluster or running kubectl commands on cluster, we need to connect with cluster
+`gcloud container clusters get-credentials spring-boot-labs-cluster --zone us-central1-a --project eighth-saga-474816-a6`
+
+`gcloud container node-pools create spring-boot-labs-pool-v2 \
+--cluster [CLUSTER_NAME] \
+--zone [ZONE] \
+--service-account 905512589301-compute@developer.gserviceaccount.com \
+--scopes "https://www.googleapis.com/auth/cloud-platform" \
+--num-nodes 1
+`
+
+
 
 ```yaml
 apiVersion: apps/v1

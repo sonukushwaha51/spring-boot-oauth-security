@@ -18,6 +18,6 @@ RUN mvn clean package -DskipTests
 
 # Stage 2: Deploy the WAR to a lightweight JRE/Tomcat image
 FROM tomcat:10.1.44-jdk17-temurin
-COPY --from=builder /app/target/*.war /usr/local/tomcat/webapps/spring-boot-oauth-security.war
+COPY --from=builder /app/target/*.war /usr/local/tomcat/webapps/ROOT.war
 EXPOSE 8080
 CMD ["catalina.sh", "run"]

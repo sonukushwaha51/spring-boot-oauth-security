@@ -28,7 +28,8 @@ spring:
             user-info-uri: https://api.linkedin.com/v2/me
             user-name-attribute: id
 
-
+server:
+  forward-headers-strategy: framework
 jasypt:
   encryptor:
     password: JmZV8pnQeUcOovP
