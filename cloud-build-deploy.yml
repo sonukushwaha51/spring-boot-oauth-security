@@ -22,9 +22,6 @@ steps:
         echo "Applying service..."
         kubectl apply -f service.yml
         
-        echo "Attempting to delete old deployment..."
-        kubectl delete deployment spring-boot-oauth-security-deployment --ignore-not-found || true
-        
         echo "Applying deployment..."
         kubectl apply -f deployment-temp.yml
 
