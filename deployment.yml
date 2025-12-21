@@ -6,6 +6,11 @@ metadata:
     app: spring-boot-oauth-security-app
 spec:
   replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
   selector:
     matchLabels:
       app: spring-boot-oauth-security-app
@@ -14,6 +19,7 @@ spec:
       labels:
         app: spring-boot-oauth-security-app
     spec:
+      terminationGracePeriodSeconds: 20
       # Optional: Link a specific Kubernetes Service Account (KSA) if using Workload Identity
       # serviceAccountName: cloud-sql-sa
       containers:
@@ -26,6 +32,13 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 8080 # The port your application (Tomcat) listens on
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8080
+            initialDelaySeconds: 20
+            periodSeconds: 5
+            failureThreshold: 3
 
           # Best practice: Define resource requests and limits
           resources:
@@ -41,10 +54,10 @@ spec:
           # Always use the latest stable version
           image: gcr.io/cloud-sql-connectors/cloud-sql-proxy:latest
           # The command to start the proxy, listening on 3306 (default MySQL port)
-          command: ["/cloud-sql-proxy",
-                    "eighth-saga-474816-a6:us-central1:spring-security",
-                    "--port=3306",
-                    "--structured-logs"]
+          args:
+            - "eighth-saga-474816-a6:us-central1:spring-security"
+            - "--port=3306"
+            - "--structured-logs"
           securityContext:
             # Runs the proxy as a non-root user for security
             runAsNonRoot: true
