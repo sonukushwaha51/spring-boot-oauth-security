@@ -50,7 +50,7 @@ public class SecurityConfiguration {
     @Bean
     public SavedRequestAwareAuthenticationSuccessHandler savedRequestAwareAuthenticationSuccessHandler() {
         SavedRequestAwareAuthenticationSuccessHandler handler = new SavedRequestAwareAuthenticationSuccessHandler();
-        handler.setDefaultTargetUrl("/v1/home");
+        handler.setDefaultTargetUrl("/home");
         handler.setAlwaysUseDefaultTargetUrl(false);
         handler.setTargetUrlParameter(null);
         return handler;
@@ -83,7 +83,7 @@ public class SecurityConfiguration {
                                 .successHandler(savedRequestAwareAuthenticationSuccessHandler())
                                 .failureHandler(this::oauthFailureHandler))
                         .oauth2Login(oauth -> oauth.successHandler(oAuthSuccessHandler).failureHandler((this::oauthFailureHandler)))
-                        .requestCache(RequestCacheConfigurer::disable)
+//                        .requestCache(RequestCacheConfigurer::disable)
                         .build();
         } catch (Exception exception) {
             throw new RuntimeException(exception);
