@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: spring-boot-oauth-security-ingress
+  annotations:
+    kubernetes.io/ingress.class: "gce"
+    networking.gke.io/managed-certificates: oauth-cert
+spec:
+  ingressClassName: gce
+  tls:
+    - hosts:
+        - hpt.mgmt.labs.com
+      secretName: oauth-cert
+  rules:
+    - host: hpt.mgmt.labs.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: spring-boot-oauth-security-external-service
+                port:
+                  number: 80
