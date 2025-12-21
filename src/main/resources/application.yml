@@ -30,11 +30,11 @@ spring:
             user-info-uri: https://api.linkedin.com/v2/me
             user-name-attribute: id
 
-#server:
-#  forward-headers-strategy: framework
-
 server:
+  servlet:
+    context-path: /v1
   shutdown: graceful
+  forward-headers-strategy: native
 
 management:
   endpoint:
