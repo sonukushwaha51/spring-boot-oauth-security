@@ -34,7 +34,7 @@ spec:
             - containerPort: 8080 # The port your application (Tomcat) listens on
           readinessProbe:
             httpGet:
-              path: /actuator/health/readiness
+              path: /v1/actuator/health/readiness
               port: 8080
             initialDelaySeconds: 20
             periodSeconds: 5

@@ -69,7 +69,7 @@ public class SecurityConfiguration {
                         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                     // Stores request in HttpSessionRequestCache and when login succeeds, it uses this cache to redirect to original url.
                         .authorizeHttpRequests(request -> request
-                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/v1/auth/**", "/v1/actuator/**").permitAll()
                         .anyRequest().authenticated())
                         .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                         .formLogin(httpSecurityFormLoginConfigurer -> httpSecurityFormLoginConfigurer
