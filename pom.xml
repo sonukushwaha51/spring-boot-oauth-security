@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.spring.boot.labs</groupId>
 	<artifactId>spring-boot-oauth-security</artifactId>
-	<version>0.0.5</version>
+	<version>0.0.6-SNAPSHOT</version>
 	<name>spring-boot-oauth-security</name>
 	<packaging>war</packaging>
 	<description>Spring boot oauth security</description>
