@@ -19,14 +19,14 @@ steps:
             --zone=us-central1-a \
             --project=eighth-saga-474816-a6
         
-        echo "Applying cert"
-        kubectl apply -f managed-cert.yml
+#        echo "Applying cert"
+#        kubectl apply -f managed-cert.yml
         
         echo "Applying service..."
         kubectl apply -f service.yml
         
-        echo "Applying ingress"
-        kubectl apply -f ingress.yml
+#        echo "Applying ingress"
+#        kubectl apply -f ingress.yml
         
         echo "Applying deployment..."
         kubectl apply -f deployment-temp.yml
