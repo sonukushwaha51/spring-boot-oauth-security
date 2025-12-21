@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.RequestCacheConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -49,8 +50,9 @@ public class SecurityConfiguration {
     @Bean
     public SavedRequestAwareAuthenticationSuccessHandler savedRequestAwareAuthenticationSuccessHandler() {
         SavedRequestAwareAuthenticationSuccessHandler handler = new SavedRequestAwareAuthenticationSuccessHandler();
-        handler.setDefaultTargetUrl("/home"); // or any fallback URL
-        handler.setAlwaysUseDefaultTargetUrl(false); // only use default if no saved request
+        handler.setDefaultTargetUrl("/home");
+        handler.setAlwaysUseDefaultTargetUrl(false);
+        handler.setTargetUrlParameter(null);
         return handler;
     }
 
@@ -69,10 +71,19 @@ public class SecurityConfiguration {
                         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                     // Stores request in HttpSessionRequestCache and when login succeeds, it uses this cache to redirect to original url.
                         .authorizeHttpRequests(request -> request
-                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/v1/login",
+                                "/v1/oauth2/**",
+                                "/v1/login/oauth2/**",
+                                "/v1/auth/**",
+                                "/v1/actuator/**").permitAll()
                         .anyRequest().authenticated())
                         .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                        .formLogin(httpSecurityFormLoginConfigurer -> httpSecurityFormLoginConfigurer
+                                .permitAll()
+                                .successHandler(savedRequestAwareAuthenticationSuccessHandler())
+                                .failureHandler(this::oauthFailureHandler))
                         .oauth2Login(oauth -> oauth.successHandler(oAuthSuccessHandler).failureHandler((this::oauthFailureHandler)))
+//                        .requestCache(RequestCacheConfigurer::disable)
                         .build();
         } catch (Exception exception) {
             throw new RuntimeException(exception);
@@ -94,7 +105,7 @@ public class SecurityConfiguration {
 //    }
 
     public void oauthFailureHandler(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) {
-        log.error("Oauth2 Server error: {}, response: {}", exception.getMessage(), response.toString());
+        log.error("Authentication error: {}, response: {}", exception.getMessage(), response.toString());
     }
 
 }

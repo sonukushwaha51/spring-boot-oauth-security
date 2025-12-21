@@ -10,8 +10,9 @@
 	</parent>
 	<groupId>com.spring.boot.labs</groupId>
 	<artifactId>spring-boot-oauth-security</artifactId>
-	<version>0.0.4</version>
+	<version>0.0.5</version>
 	<name>spring-boot-oauth-security</name>
+	<packaging>war</packaging>
 	<description>Spring boot oauth security</description>
 	<url/>
 	<licenses>
@@ -27,7 +28,7 @@
 		<url/>
 	</scm>
 	<properties>
-		<java.version>21</java.version>
+		<java.version>17</java.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -49,6 +50,19 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-tomcat</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jul-to-slf4j</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

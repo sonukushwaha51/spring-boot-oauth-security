@@ -1,0 +1,39 @@
+steps:
+  - name: 'gcr.io/cloud-builders/gcloud'
+    id: 'Substitute-Image-Tag'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        sed "s|IMAGE_TAG|${_IMAGE_VERSION}|g" deployment.yml > deployment-temp.yml
+
+  # 2. Get Credentials AND Deploy/Check Status (Combined Step)
+  - name: 'gcr.io/cloud-builders/gcloud' # Using gcloud image to run all bash commands
+    id: 'Deploy-and-Check'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        # 1. Get Credentials
+        gcloud container clusters get-credentials spring-boot-labs-cluster \
+            --zone=us-central1-a \
+            --project=eighth-saga-474816-a6
+        
+        echo "Applying service..."
+        kubectl apply -f service.yml
+        
+        echo "Applying deployment..."
+        kubectl apply -f deployment-temp.yml
+
+        echo "Checking rollout status..."
+        kubectl rollout restart deployment spring-boot-oauth-security-deployment
+        kubectl rollout status deployment/spring-boot-oauth-security-deployment
+    env:
+      - 'CLOUDSDK_CONTAINER_CLUSTER=spring-boot-labs-cluster'
+      - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
+
+substitutions:
+  _IMAGE_VERSION : latest
+
+options:
+  logging: CLOUD_LOGGING_ONLY
